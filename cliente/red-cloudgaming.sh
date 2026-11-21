@@ -60,7 +60,11 @@ if [[ ! -x $TOOLCHAINDIR/bin/go ]]; then
 fi
 
 # Lo mismo que hace el Makefile de tailscale-android, sin Docker ni make.
-cd "$FUENTES"
+# Desde un enlace con nombre neutro: Go anota en la librería la carpeta de las fuentes (el
+# «replace» del módulo que arma gomobile, aun con -trimpath), y así no queda la carpeta personal.
+NEUTRA=/tmp/cloudgaming-tailscale-android
+ln -sfn "$FUENTES" "$NEUTRA"
+cd "$NEUTRA"
 export GOTOOLCHAIN=local TS_USE_TOOLCHAIN=1
 export GOPATH=$CACHE/go GOCACHE=$CACHE/go-build GOBIN=$FUENTES/android/build/go/bin
 export GOMAXPROCS=6
@@ -73,7 +77,8 @@ nice -n 19 ./tool/go run tailscale.com/cmd/mkversion > tailscale.version
 
 echo "· libtailscale ($DESTINOS); la primera vez tarda varios minutos"
 mkdir -p "$(dirname "$SALIDA")"
-nice -n 19 gomobile bind -target "$DESTINOS" -androidapi 26 \
+# -trimpath: que la librería no guarde las rutas de esta PC (usuario, discos) en el APK.
+nice -n 19 gomobile bind -target "$DESTINOS" -androidapi 26 -trimpath \
   -tags "$(./build-tags.sh) ts_omit_cachenetmap" \
   -ldflags "-s -w -linkmode=external -extldflags=-Wl,-z,max-page-size=16384 $(./version-ldflags.sh)" \
   -o "$SALIDA" ./libtailscale

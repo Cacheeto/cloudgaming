@@ -34,7 +34,9 @@ Son dos piezas que se hablan por una red privada de [Tailscale](https://tailscal
 
 ## Instalar en una PC
 
-Los instaladores dejan todo listo: Tailscale, Sunshine y el panel, que arranca solo.
+Bajá el instalador (y si querés, los APK sueltos) de la
+[última versión](https://github.com/Cacheeto/cloudgaming/releases/latest). Los instaladores
+dejan todo listo: Tailscale, Sunshine y el panel, que arranca solo.
 
 - **Linux** (Fedora, Bazzite y otras atómicas, Ubuntu, Debian, Arch, openSUSE): ver
   [`host/linux/LEEME.txt`](host/linux/LEEME.txt).

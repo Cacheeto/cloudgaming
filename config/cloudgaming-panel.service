@@ -1,0 +1,15 @@
+[Unit]
+Description=CloudGaming Host (el panel de la PC para la app)
+After=graphical-session.target tailscaled.service
+PartOf=graphical-session.target
+
+[Service]
+# La página sale de host/web (no la embebida): así un cambio en app.js se ve sin recompilar.
+# %h es tu carpeta personal: cambiá %h/cloudgaming por la carpeta de este repo.
+ExecStart=%h/cloudgaming/host/dist/cloudgaming-host-linux-amd64 -web %h/cloudgaming/host/web
+Restart=on-failure
+RestartSec=5
+Nice=10
+
+[Install]
+WantedBy=graphical-session.target

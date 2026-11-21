@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Application
+Name=CloudGaming: bloquear al entrar
+Comment=Si la PC entró sola (inicio automático), la deja bloqueada hasta que la desbloquees o empiece un stream
+Exec=sh -c "~/.local/bin/cloudgaming-sesion al-entrar"
+NoDisplay=true

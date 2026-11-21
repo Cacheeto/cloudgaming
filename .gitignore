@@ -1,0 +1,11 @@
+# Respaldos locales: incluyen el estado de Sunshine (credenciales, certificados).
+/respaldos/
+
+# El APK se genera con cliente/build-cloudgaming.sh.
+/host/web/descargas/*.apk
+
+# Lo que compila host/compilar.sh, y lo que empaquetar.sh copia adentro del instalador de Windows.
+/host/dist/
+/host/instalador/adentro/
+
+__pycache__/

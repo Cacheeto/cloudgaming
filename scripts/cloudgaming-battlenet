@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# Lanza Battle.net (prefijo de Faugus) con el umu-run del sistema, fuera del flatpak.
+# Dentro del flatpak los PID son de otro espacio de nombres: Steam descarta el
+# _NET_WM_PID de la ventana, no reconoce el juego y en Steam Link aplica la
+# configuración de mando de escritorio (el joystick no llega al juego).
+# Mismo entorno que usa Faugus para el juego "battlenet".
+export WINEPREFIX="$HOME/Faugus/battlenet"
+export GAMEID="umu-faugus5dd8f7d6"
+export PROTONPATH="$HOME/.local/share/Steam/compatibilitytools.d/Proton-CachyOS Latest"
+export WINE_SIMULATE_WRITECOPY=1
+export PROTON_ENABLE_WAYLAND=0
+exec /usr/bin/umu-run "$WINEPREFIX/drive_c/Program Files (x86)/Battle.net/Battle.net.exe" "$@"

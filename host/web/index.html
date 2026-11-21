@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#081430">
+<meta name="color-scheme" content="dark">
+<meta name="mobile-web-app-capable" content="yes">
+<title>CloudGaming</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icono.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icono-192.png">
+<link rel="stylesheet" href="estilo.css">
+<script src="musica.js" defer></script>
+<script src="app.js" defer></script>
+</head>
+<body>
+<canvas id="ondas" aria-hidden="true"></canvas>
+
+<header id="barra">
+  <div id="indicadores" aria-live="polite"></div>
+  <div id="reloj"><span id="fecha"></span><span id="hora"></span></div>
+</header>
+
+<main id="menu" hidden>
+  <nav id="categorias" aria-label="Categorías"></nav>
+  <ul id="items" role="listbox" aria-label="Opciones"></ul>
+  <p id="ayuda">Deslizá ↔ para cambiar de categoría · ↕ para moverte · tocá para elegir</p>
+</main>
+
+<section id="entrada" hidden>
+  <form id="form-entrada" autocomplete="on">
+    <div class="avatar" aria-hidden="true"></div>
+    <h1>CloudGaming</h1>
+    <p class="nota">Entrá con el usuario y la contraseña de Sunshine.</p>
+    <label>Usuario<input name="usuario" autocomplete="username" autocapitalize="none" required></label>
+    <label>Contraseña<input name="clave" type="password" autocomplete="current-password" required></label>
+    <button type="submit">Entrar</button>
+    <p id="error-entrada" class="error" role="alert"></p>
+  </form>
+</section>
+
+<aside id="hoja" hidden>
+  <div class="hoja-fondo"></div>
+  <div class="hoja-panel" role="dialog" aria-modal="true" aria-labelledby="hoja-titulo">
+    <h2 id="hoja-titulo"></h2>
+    <div class="hoja-cuerpo"></div>
+  </div>
+</aside>
+
+<div id="aviso" role="status" aria-live="polite"></div>
+</body>
+</html>

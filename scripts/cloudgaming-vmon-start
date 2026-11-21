@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# Envoltorio de /usr/libexec/sunshine-start-vmon (Bazzite).
+# Al apagar el monitor físico desaparece su salida de audio (HDMI/DP) y Sunshine
+# guardaría la analógica como "la de antes". Guardamos la salida real primero.
+pactl get-default-sink > "${XDG_RUNTIME_DIR:-/run/user/$UID}/cloudgaming-default-sink" 2>/dev/null || true
+/usr/libexec/sunshine-start-vmon || exit $?
+
+# Recién ahora, con el monitor físico apagado, se desbloquea la sesión (si estaba
+# bloqueada): en casa nadie la ve abierta y en el celu no aparece la pantalla de bloqueo.
+"$HOME/.local/bin/cloudgaming-sesion" desbloquear

@@ -1,0 +1,27 @@
+CloudGaming Host para Linux
+===========================
+
+Deja esta PC lista para jugar desde el celu con la app CloudGaming.
+Instala lo que falte:
+
+  1. Tailscale: la red privada entre el celu y la PC, con tu cuenta.
+  2. Sunshine: el que manda la imagen al celu y recibe los controles.
+  3. CloudGaming Host: el panel que usa la app. Arranca solo al entrar a la sesión.
+
+Cómo se usa
+-----------
+
+Abrí una terminal en esta carpeta y corré:
+
+    ./instalar.sh
+
+Corrélo con tu usuario, sin sudo: la clave de administrador te la pide cuando hace falta.
+Al final te dice cómo instalar la app en el celu.
+
+Otras opciones:
+
+    ./instalar.sh --revisar       muestra qué está y qué falta, sin tocar nada
+    ./instalar.sh --desinstalar   quita CloudGaming Host (Tailscale y Sunshine quedan)
+
+Anda en Fedora, Ubuntu (y Mint, Pop!_OS, Zorin), Debian 13, Arch (y Manjaro,
+EndeavourOS, CachyOS) y openSUSE, en PC de 64 bits.

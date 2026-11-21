@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+# Envoltorio de /usr/libexec/sunshine-stop-vmon (Bazzite).
+
+# Antes de volver a prender el monitor físico, la sesión queda bloqueada.
+"$HOME/.local/bin/cloudgaming-sesion" bloquear
+/usr/libexec/sunshine-stop-vmon
+
+# El original escribe "output_name = " vacío en sunshine.conf (la variable queda
+# dentro del subshell del while) y en el próximo arranque Sunshine no encuentra
+# ninguna pantalla. Borramos la línea para que use la pantalla predeterminada.
+for conf in "$HOME/.config/sunshine/sunshine.conf" \
+            "$HOME/.var/app/dev.lizardbyte.app.Sunshine/config/sunshine/sunshine.conf"; do
+  [[ -f "$conf" ]] && sed -i '/^output_name/d' "$conf"
+done
+
+# Volver a la salida de audio guardada por cloudgaming-vmon-start. Va en segundo
+# plano y con demora: la salida del monitor tarda en reaparecer y Sunshine
+# restaura la suya al cerrar el stream, así que la nuestra tiene que ir última.
+saved="${XDG_RUNTIME_DIR:-/run/user/$UID}/cloudgaming-default-sink"
+if [[ -s "$saved" ]]; then
+  sink=$(<"$saved")
+  setsid -f bash -c '
+    for _ in $(seq 20); do
+      pactl list short sinks | cut -f2 | grep -qxF "$1" && break
+      sleep 1
+    done
+    sleep 3
+    pactl set-default-sink "$1" && rm -f "$2"
+  ' _ "$sink" "$saved" >/dev/null 2>&1
+fi
+exit 0

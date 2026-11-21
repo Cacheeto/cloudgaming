@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+# Bloquea o desbloquea la sesión gráfica (KDE) del usuario.
+#
+# Con el inicio automático la PC entra sola al escritorio al prenderse: así arrancan
+# Sunshine y el panel. Para que no quede abierta en casa, la sesión se bloquea apenas
+# entra, se desbloquea sola al empezar un stream (con el monitor físico ya apagado) y
+# se vuelve a bloquear al terminar.
+#   cloudgaming-sesion bloquear | desbloquear | al-entrar
+# «al-entrar» bloquea solo si la sesión arrancó con el inicio automático: si entraste
+# poniendo la contraseña no tiene sentido pedírtela otra vez.
+# Sirve también desde Sunshine, que corre como servicio fuera de la sesión: por eso se
+# busca la sesión gráfica del usuario en lugar de usar «la propia».
+set -u
+
+sesion=$(loginctl show-user "$(id -un)" -p Display --value 2>/dev/null)
+if [[ -z $sesion ]]; then
+  echo "No encuentro la sesión gráfica" >&2
+  exit 0  # nunca frenar un stream por esto
+fi
+
+case "${1:-}" in
+  bloquear) loginctl lock-session "$sesion" ;;
+  desbloquear) loginctl unlock-session "$sesion" ;;
+  al-entrar)
+    servicio=$(loginctl show-session "$sesion" -p Service --value 2>/dev/null)
+    [[ $servicio == *autologin* ]] && loginctl lock-session "$sesion" ;;
+  *) echo "Uso: $0 bloquear|desbloquear|al-entrar" >&2; exit 2 ;;
+esac
+exit 0

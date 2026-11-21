@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+# Cierra la sesión de Wine de Battle.net para que la próxima vez arranque de cero.
+#
+# WoW (con Proton) toma el tamaño de pantalla que Wine anotó cuando arrancó
+# Battle.net, y no se entera si después cambian los monitores. Si Battle.net quedó
+# abierto en el monitor de la PC (por ejemplo, 3440x1440) y empieza un stream (monitor virtual
+# del tamaño del celu), WoW se abre de 3440x1440 y en el celu se ve solo un pedazo.
+# Lo mismo al revés, al volver a la PC.
+#
+# Va en los prep-cmd de la app «WoW Forever» de Sunshine, con --con-wow en los dos:
+#   do:   antes del stream (si WoW quedó abierto en la PC, tendría el tamaño equivocado)
+#   undo: al terminar la sesión (un WoW abierto quedaría con el tamaño del celu en la PC)
+# Sin --con-wow, si WoW está abierto no toca nada.
+# Nunca falla: si devolviera error, Sunshine no abriría el stream.
+set -u
+
+WOW='Wow\.exe'
+# Solo los procesos de Windows, no los de Proton/pressure-vessel que los envuelven.
+BNET='^C:\\Program Files \(x86\)\\Battle\.net\\Battle\.net\.exe'
+# El proceso de Proton vive lo mismo que la sesión de Wine de este prefijo.
+SESION='/proton waitforexitandrun /home/[^ ]*/Faugus/battlenet'
+
+if pgrep -f "$WOW" >/dev/null && [[ "${1:-}" != --con-wow ]]; then
+  echo "WoW está abierto: dejo Battle.net como está"
+  exit 0
+fi
+if ! pgrep -f "$SESION" >/dev/null; then
+  exit 0
+fi
+
+echo "Cerrando Battle.net para que arranque con la pantalla actual"
+pkill -TERM -f "$WOW"
+pkill -TERM -f "$BNET"
+for i in $(seq 40); do  # hasta 20 s
+  pgrep -f "$SESION" >/dev/null || exit 0
+  if (( i == 20 )); then
+    pkill -KILL -f "$WOW"
+    pkill -KILL -f "$BNET"
+  fi
+  sleep 0.5
+done
+echo "La sesión de Wine de Battle.net sigue abierta" >&2
+exit 0
